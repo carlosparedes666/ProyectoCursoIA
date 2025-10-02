@@ -10,9 +10,27 @@ public class ApplicationDbContext : DbContext
     {
     }
 
+    public DbSet<TblPrueba> TblPruebas => Set<TblPrueba>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<TblPrueba>(entity =>
+        {
+            entity.ToTable("tblPruebas");
+            entity.HasKey(e => e.Id);
 
+            entity.Property(e => e.Id)
+                .HasColumnName("ID")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Fecha)
+                .HasColumnType("datetime2")
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("GETDATE()");
+
+            entity.Property(e => e.NumeroCel)
+                .HasMaxLength(10);
+        });
     }
 }
