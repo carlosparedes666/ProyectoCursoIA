@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using ProyectoCursoIA.Data;
@@ -407,12 +408,16 @@ static void MapLoginEndpoint(RouteGroupBuilder group)
 
         if (usuario is null)
         {
-            return Results.Unauthorized(new { message = "Usuario o contraseña incorrectos." });
+            return Results.Json(
+                new { message = "Usuario o contraseña incorrectos." },
+                statusCode: StatusCodes.Status401Unauthorized);
         }
 
         if (!usuario.Activo)
         {
-            return Results.Unauthorized(new { message = "El usuario no está activo." });
+            return Results.Json(
+                new { message = "El usuario no está activo." },
+                statusCode: StatusCodes.Status401Unauthorized);
         }
 
         return Results.Ok(new
