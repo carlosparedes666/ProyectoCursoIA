@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Prueba de CODEX - Crear consulta</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script defer src="js/common.js"></script>
+    <script defer src="js/create-consulta.js"></script>
+</head>
+<body class="app">
+    <header class="top-bar">
+        <h1>Prueba de CODEX</h1>
+        <nav>
+            <a href="dashboard.html" class="button button--ghost">Volver al dashboard</a>
+            <button id="logoutButton" class="button button--ghost">Cerrar sesión</button>
+        </nav>
+    </header>
+    <main class="content">
+        <section class="card">
+            <h2>Registrar nueva consulta</h2>
+            <p class="text-subtle">Completa la información para vincular a un paciente con un médico.</p>
+            <form id="consultaForm">
+                <label for="medicoSelect">
+                    Médico
+                    <select id="medicoSelect" name="medico" required>
+                        <option value="">Cargando médicos...</option>
+                    </select>
+                </label>
+                <label for="pacienteSelect">
+                    Paciente
+                    <select id="pacienteSelect" name="paciente" required>
+                        <option value="">Cargando pacientes...</option>
+                    </select>
+                </label>
+                <label for="sintomas">
+                    Síntomas
+                    <textarea id="sintomas" name="sintomas" placeholder="Describe los síntomas del paciente" required></textarea>
+                </label>
+                <label for="recomendaciones">
+                    Recomendaciones
+                    <textarea id="recomendaciones" name="recomendaciones" placeholder="Escribe recomendaciones (opcional)"></textarea>
+                </label>
+                <label for="diagnostico">
+                    Diagnóstico
+                    <textarea id="diagnostico" name="diagnostico" placeholder="Escribe el diagnóstico (opcional)"></textarea>
+                </label>
+                <div id="consultaFeedback" role="alert"></div>
+                <button type="submit">Guardar consulta</button>
+            </form>
+        </section>
+    </main>
+    <footer class="footer">&copy; <span id="year"></span> Prueba de CODEX.</footer>
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
