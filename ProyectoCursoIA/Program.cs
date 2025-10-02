@@ -263,7 +263,9 @@ static void MapConsultaEndpoints(RouteGroupBuilder group)
             .AsNoTracking()
             .Include(c => c.Medico)
             .Include(c => c.Paciente)
-            .OrderByDescending(c => c.Id);
+            .AsQueryable();
+
+        query = query.OrderByDescending(c => c.Id);
 
         if (top.HasValue)
         {
