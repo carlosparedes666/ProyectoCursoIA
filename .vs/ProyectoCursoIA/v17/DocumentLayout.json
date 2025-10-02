@@ -1,12 +1,37 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\Csharp2022\\ProyectoCursoIA\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{21EA2155-C565-4F68-BBB6-B16A20C403B2}|ProyectoCursoIA\\ProyectoCursoIA.csproj|d:\\csharp2022\\proyectocursoia\\proyectocursoia\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{21EA2155-C565-4F68-BBB6-B16A20C403B2}|ProyectoCursoIA\\ProyectoCursoIA.csproj|solutionrelative:proyectocursoia\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Csharp2022\\ProyectoCursoIA\\ProyectoCursoIA\\Program.cs",
+              "RelativeDocumentMoniker": "ProyectoCursoIA\\Program.cs",
+              "ToolTip": "D:\\Csharp2022\\ProyectoCursoIA\\ProyectoCursoIA\\Program.cs",
+              "RelativeToolTip": "ProyectoCursoIA\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-02T01:10:32.148Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
