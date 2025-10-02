@@ -1,13 +1,19 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoCursoIA.Models;
 
+[Table("tblPruebas")]
 public class TblPrueba
 {
-    public int ID { get; set; }
+    [Key]
+    [Column("ID")]
+    public int Id { get; set; }
 
+    [DataType(DataType.DateTime)]
     public DateTime Fecha { get; set; }
 
     [StringLength(10)]
-    public required string NumeroCel { get; set; }
+    public string NumeroCel { get; set; } = string.Empty;
 }
