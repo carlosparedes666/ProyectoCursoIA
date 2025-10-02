@@ -328,8 +328,8 @@ static void MapConsultaEndpoints(RouteGroupBuilder group)
             IdMedico = request.IdMedico,
             IdPaciente = request.IdPaciente,
             Sintomas = request.Sintomas,
-            Recomendaciones = request.Recomendaciones ?? string.Empty,
-            Diagnostico = request.Diagnostico ?? string.Empty
+            Recomendaciones = request.Recomendaciones,
+            Diagnostico = request.Diagnostico
         };
 
         db.Consultas.Add(consulta);
@@ -377,8 +377,8 @@ static void MapConsultaEndpoints(RouteGroupBuilder group)
         consulta.IdMedico = request.IdMedico;
         consulta.IdPaciente = request.IdPaciente;
         consulta.Sintomas = request.Sintomas;
-        consulta.Recomendaciones = request.Recomendaciones ?? string.Empty;
-        consulta.Diagnostico = request.Diagnostico ?? string.Empty;
+        consulta.Recomendaciones = request.Recomendaciones;
+        consulta.Diagnostico = request.Diagnostico;
 
         await db.SaveChangesAsync();
         return Results.NoContent();
@@ -433,4 +433,4 @@ public record LoginRequest(string Correo, string Password);
 
 public record ConsultaRequest(int IdMedico, int IdPaciente, string Sintomas, string? Recomendaciones, string? Diagnostico);
 
-public record ConsultaResponse(int Id, int IdMedico, int IdPaciente, string MedicoNombre, string PacienteNombre, string Sintomas, string Recomendaciones, string Diagnostico);
+public record ConsultaResponse(int Id, int IdMedico, int IdPaciente, string MedicoNombre, string PacienteNombre, string Sintomas, string? Recomendaciones, string? Diagnostico);

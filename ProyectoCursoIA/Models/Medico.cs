@@ -7,9 +7,9 @@ public class Medico
 {
     public int Id { get; set; }
     public string PrimerNombre { get; set; } = string.Empty;
-    public string SegundoNombre { get; set; } = string.Empty;
+    public string? SegundoNombre { get; set; }
     public string ApellidoPaterno { get; set; } = string.Empty;
-    public string ApellidoMaterno { get; set; } = string.Empty;
+    public string? ApellidoMaterno { get; set; }
     public string Cedula { get; set; } = string.Empty;
     public long Telefono { get; set; }
     public string Especialidad { get; set; } = string.Empty;
