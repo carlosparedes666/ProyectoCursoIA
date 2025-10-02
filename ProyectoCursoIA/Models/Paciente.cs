@@ -7,9 +7,9 @@ public class Paciente
 {
     public int Id { get; set; }
     public string PrimerNombre { get; set; } = string.Empty;
-    public string SegundoNombre { get; set; } = string.Empty;
+    public string? SegundoNombre { get; set; }
     public string ApellidoPaterno { get; set; } = string.Empty;
-    public string ApellidoMaterno { get; set; } = string.Empty;
+    public string? ApellidoMaterno { get; set; }
     public string Telefono { get; set; } = string.Empty;
     public bool Activo { get; set; } = true;
     public DateTime FechaCreacion { get; set; }
