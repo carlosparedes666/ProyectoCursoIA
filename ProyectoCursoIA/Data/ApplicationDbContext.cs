@@ -48,14 +48,17 @@ public class ApplicationDbContext : DbContext
 
             entity.Property(e => e.Correo)
                 .HasColumnName("correo")
+                .HasMaxLength(50)
                 .IsRequired();
 
             entity.Property(e => e.Password)
                 .HasColumnName("password")
+                .HasMaxLength(50)
                 .IsRequired();
 
             entity.Property(e => e.NombreCompleto)
                 .HasColumnName("nombre_completo")
+                .HasMaxLength(50)
                 .IsRequired();
 
             entity.Property(e => e.IdMedico)
@@ -89,20 +92,25 @@ public class ApplicationDbContext : DbContext
 
             entity.Property(e => e.PrimerNombre)
                 .HasColumnName("primer_nombre")
+                .HasMaxLength(50)
                 .IsRequired();
 
             entity.Property(e => e.SegundoNombre)
+                .HasMaxLength(50)
                 .HasColumnName("segundo_nombre");
 
             entity.Property(e => e.ApellidoPaterno)
                 .HasColumnName("apellido_paterno")
+                .HasMaxLength(50)
                 .IsRequired();
 
             entity.Property(e => e.ApellidoMaterno)
-                .HasColumnName("apellido_materno");
+                .HasColumnName("apellido_materno")
+                .HasMaxLength(50);
 
             entity.Property(e => e.Cedula)
                 .HasColumnName("cedula")
+                .HasMaxLength(50)
                 .IsRequired();
 
             entity.Property(e => e.Telefono)
@@ -111,10 +119,12 @@ public class ApplicationDbContext : DbContext
 
             entity.Property(e => e.Especialidad)
                 .HasColumnName("especialidad")
+                .HasMaxLength(50)
                 .IsRequired();
 
             entity.Property(e => e.Email)
                 .HasColumnName("email")
+                .HasMaxLength(50)
                 .IsRequired();
 
             entity.Property(e => e.Activo)
@@ -139,20 +149,25 @@ public class ApplicationDbContext : DbContext
 
             entity.Property(e => e.PrimerNombre)
                 .HasColumnName("primer_nombre")
+                .HasMaxLength(50)
                 .IsRequired();
 
             entity.Property(e => e.SegundoNombre)
-                .HasColumnName("segundo_nombre");
+                .HasColumnName("segundo_nombre")
+                .HasMaxLength(50);
 
             entity.Property(e => e.ApellidoPaterno)
                 .HasColumnName("apellido_paterno")
+                .HasMaxLength(50)
                 .IsRequired();
 
             entity.Property(e => e.ApellidoMaterno)
-                .HasColumnName("apellido_materno");
+                .HasColumnName("apellido_materno")
+                .HasMaxLength(50);
 
             entity.Property(e => e.Telefono)
                 .HasColumnName("telefono")
+                .HasMaxLength(50)
                 .IsRequired();
 
             entity.Property(e => e.Activo)
@@ -183,13 +198,16 @@ public class ApplicationDbContext : DbContext
 
             entity.Property(e => e.Sintomas)
                 .HasColumnName("sintomas")
+                .HasMaxLength(50)
                 .IsRequired();
 
             entity.Property(e => e.Recomendaciones)
-                .HasColumnName("recomendaciones");
+                .HasColumnName("recomendaciones")
+                .HasMaxLength(50);
 
             entity.Property(e => e.Diagnostico)
-                .HasColumnName("diagnostico");
+                .HasColumnName("diagnostico")
+                .HasMaxLength(50);
 
             entity.HasOne(e => e.Medico)
                 .WithMany(m => m.Consultas)
