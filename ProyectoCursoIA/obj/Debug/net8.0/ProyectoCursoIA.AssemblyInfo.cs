@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProyectoCursoIA")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6dda3433dac8e744517d478899f1697e19cbcae7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+15cdc1cf1167e8219abf07a1de15541501cf2da5")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProyectoCursoIA")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProyectoCursoIA")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "D:\\Csharp2022\\ProyectoCursoIA\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{21EA2155-C565-4F68-BBB6-B16A20C403B2}|ProyectoCursoIA\\ProyectoCursoIA.csproj|d:\\csharp2022\\proyectocursoia\\proyectocursoia\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21EA2155-C565-4F68-BBB6-B16A20C403B2}|ProyectoCursoIA\\ProyectoCursoIA.csproj|solutionrelative:proyectocursoia\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{21EA2155-C565-4F68-BBB6-B16A20C403B2}|ProyectoCursoIA\\ProyectoCursoIA.csproj|d:\\csharp2022\\proyectocursoia\\proyectocursoia\\migrations\\applicationdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{21EA2155-C565-4F68-BBB6-B16A20C403B2}|ProyectoCursoIA\\ProyectoCursoIA.csproj|solutionrelative:proyectocursoia\\migrations\\applicationdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{21EA2155-C565-4F68-BBB6-B16A20C403B2}|ProyectoCursoIA\\ProyectoCursoIA.csproj|d:\\csharp2022\\proyectocursoia\\proyectocursoia\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{21EA2155-C565-4F68-BBB6-B16A20C403B2}|ProyectoCursoIA\\ProyectoCursoIA.csproj|solutionrelative:proyectocursoia\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{21EA2155-C565-4F68-BBB6-B16A20C403B2}|ProyectoCursoIA\\ProyectoCursoIA.csproj|d:\\csharp2022\\proyectocursoia\\proyectocursoia\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{21EA2155-C565-4F68-BBB6-B16A20C403B2}|ProyectoCursoIA\\ProyectoCursoIA.csproj|solutionrelative:proyectocursoia\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{21EA2155-C565-4F68-BBB6-B16A20C403B2}|ProyectoCursoIA\\ProyectoCursoIA.csproj|d:\\csharp2022\\proyectocursoia\\proyectocursoia\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{21EA2155-C565-4F68-BBB6-B16A20C403B2}|ProyectoCursoIA\\ProyectoCursoIA.csproj|solutionrelative:proyectocursoia\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,25 +27,38 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\Csharp2022\\ProyectoCursoIA\\ProyectoCursoIA\\appsettings.json",
-              "RelativeDocumentMoniker": "ProyectoCursoIA\\appsettings.json",
-              "ToolTip": "D:\\Csharp2022\\ProyectoCursoIA\\ProyectoCursoIA\\appsettings.json",
-              "RelativeToolTip": "ProyectoCursoIA\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-10-02T18:31:30.006Z",
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "D:\\Csharp2022\\ProyectoCursoIA\\ProyectoCursoIA\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "ProyectoCursoIA\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "D:\\Csharp2022\\ProyectoCursoIA\\ProyectoCursoIA\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "ProyectoCursoIA\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-02T19:44:44.557Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "ApplicationDbContextModelSnapshot.cs",
+              "DocumentMoniker": "D:\\Csharp2022\\ProyectoCursoIA\\ProyectoCursoIA\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "RelativeDocumentMoniker": "ProyectoCursoIA\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "ToolTip": "D:\\Csharp2022\\ProyectoCursoIA\\ProyectoCursoIA\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "RelativeToolTip": "ProyectoCursoIA\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-02T19:29:18.535Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Csharp2022\\ProyectoCursoIA\\ProyectoCursoIA\\Program.cs",
               "RelativeDocumentMoniker": "ProyectoCursoIA\\Program.cs",
               "ToolTip": "D:\\Csharp2022\\ProyectoCursoIA\\ProyectoCursoIA\\Program.cs",
               "RelativeToolTip": "ProyectoCursoIA\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-02T17:39:15.637Z",
               "EditorCaption": ""
