@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gestión de médicos</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script defer src="js/common.js"></script>
+    <script defer src="js/medicos.js"></script>
+</head>
+<body class="app">
+    <header class="top-bar">
+        <h1>Prueba de CODEX</h1>
+        <nav>
+            <a class="button button--ghost" href="dashboard.html">Dashboard</a>
+            <a class="button button--ghost" href="usuarios.html">Usuarios</a>
+            <a class="button button--ghost" href="medicos.html">Médicos</a>
+            <a class="button button--ghost" href="pacientes.html">Pacientes</a>
+            <button id="logoutButton" class="button button--ghost">Cerrar sesión</button>
+        </nav>
+    </header>
+    <main class="content">
+        <section class="card card--narrow">
+            <h2 id="medicoFormTitle">Registrar médico</h2>
+            <p class="text-subtle">Completa la información para registrar o actualizar un médico.</p>
+            <form id="medicoForm" novalidate>
+                <p id="medicoFormFeedback"></p>
+                <label>
+                    Primer nombre
+                    <input type="text" name="primerNombre" id="medicoPrimerNombre" required />
+                </label>
+                <label>
+                    Segundo nombre
+                    <input type="text" name="segundoNombre" id="medicoSegundoNombre" />
+                </label>
+                <label>
+                    Apellido paterno
+                    <input type="text" name="apellidoPaterno" id="medicoApellidoPaterno" required />
+                </label>
+                <label>
+                    Apellido materno
+                    <input type="text" name="apellidoMaterno" id="medicoApellidoMaterno" />
+                </label>
+                <label>
+                    Cédula profesional
+                    <input type="text" name="cedula" id="medicoCedula" required />
+                </label>
+                <label>
+                    Teléfono
+                    <input type="tel" name="telefono" id="medicoTelefono" required />
+                </label>
+                <label>
+                    Especialidad
+                    <input type="text" name="especialidad" id="medicoEspecialidad" required />
+                </label>
+                <label>
+                    Correo electrónico
+                    <input type="email" name="email" id="medicoEmail" required />
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" name="activo" id="medicoActivo" checked />
+                    <span>Médico activo</span>
+                </label>
+                <div class="form__actions">
+                    <button type="submit" id="medicoSubmitButton">Registrar médico</button>
+                    <button type="button" id="medicoCancelButton" class="button button--ghost" hidden>Cancelar</button>
+                </div>
+            </form>
+        </section>
+        <section class="card">
+            <div class="card__header">
+                <h2>Médicos registrados</h2>
+                <button type="button" id="medicosReloadButton" class="button button--ghost">Actualizar lista</button>
+            </div>
+            <p id="medicosListFeedback"></p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Especialidad</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="medicosTableBody">
+                    <tr>
+                        <td colspan="7" class="empty-state">Cargando médicos...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer class="footer">&copy; <span id="year"></span> Prueba de CODEX.</footer>
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

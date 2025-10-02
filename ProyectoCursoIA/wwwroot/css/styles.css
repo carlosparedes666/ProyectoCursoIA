@@ -145,6 +145,18 @@ label {
     font-size: 0.95rem;
 }
 
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.checkbox input[type="checkbox"] {
+    width: auto;
+    accent-color: var(--accent);
+    transform: scale(1.1);
+}
+
 input[type="email"],
 input[type="password"],
 input[type="text"],
@@ -192,6 +204,12 @@ textarea:focus {
     color: var(--success);
 }
 
+.form__actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -214,6 +232,29 @@ textarea:focus {
 
 .table tbody tr:hover {
     background: rgba(56, 189, 248, 0.08);
+}
+
+.table-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.button--sm,
+button.button--sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+}
+
+.button--danger,
+button.button--danger {
+    background: var(--danger);
+    color: var(--bg-primary);
+}
+
+.button--danger:hover,
+button.button--danger:hover {
+    background: #ef4444;
 }
 
 .empty-state {

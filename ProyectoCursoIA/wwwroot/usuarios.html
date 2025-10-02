@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gestión de usuarios</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script defer src="js/common.js"></script>
+    <script defer src="js/usuarios.js"></script>
+</head>
+<body class="app">
+    <header class="top-bar">
+        <h1>Prueba de CODEX</h1>
+        <nav>
+            <a class="button button--ghost" href="dashboard.html">Dashboard</a>
+            <a class="button button--ghost" href="usuarios.html">Usuarios</a>
+            <a class="button button--ghost" href="medicos.html">Médicos</a>
+            <a class="button button--ghost" href="pacientes.html">Pacientes</a>
+            <button id="logoutButton" class="button button--ghost">Cerrar sesión</button>
+        </nav>
+    </header>
+    <main class="content">
+        <section class="card card--narrow">
+            <h2 id="usuarioFormTitle">Registrar usuario</h2>
+            <p class="text-subtle">Completa el formulario para agregar un nuevo usuario o edita uno existente.</p>
+            <form id="usuarioForm" novalidate>
+                <p id="usuarioFormFeedback"></p>
+                <label>
+                    Correo electrónico
+                    <input type="email" name="correo" id="usuarioCorreo" required />
+                </label>
+                <label>
+                    Contraseña
+                    <input type="password" name="password" id="usuarioPassword" required />
+                </label>
+                <label>
+                    Nombre completo
+                    <input type="text" name="nombreCompleto" id="usuarioNombreCompleto" required />
+                </label>
+                <label>
+                    Médico asociado
+                    <select name="idMedico" id="usuarioMedico">
+                        <option value="">Sin asignar</option>
+                    </select>
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" name="activo" id="usuarioActivo" checked />
+                    <span>Usuario activo</span>
+                </label>
+                <div class="form__actions">
+                    <button type="submit" id="usuarioSubmitButton">Registrar usuario</button>
+                    <button type="button" id="usuarioCancelButton" class="button button--ghost" hidden>Cancelar</button>
+                </div>
+            </form>
+        </section>
+        <section class="card">
+            <div class="card__header">
+                <h2>Usuarios registrados</h2>
+                <button type="button" id="usuariosReloadButton" class="button button--ghost">Actualizar lista</button>
+            </div>
+            <p id="usuariosListFeedback"></p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Correo</th>
+                        <th>Nombre</th>
+                        <th>Médico</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="usuariosTableBody">
+                    <tr>
+                        <td colspan="6" class="empty-state">Cargando usuarios...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer class="footer">&copy; <span id="year"></span> Prueba de CODEX.</footer>
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
