@@ -95,6 +95,38 @@ body {
     margin-bottom: 1rem;
 }
 
+.consultas__filters {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .consultas__filters {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        align-items: end;
+    }
+}
+
+.consultas__filters-actions {
+    display: flex;
+    align-items: flex-end;
+}
+
+.consultas__filters-actions .button {
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .consultas__filters-actions {
+        justify-content: flex-end;
+    }
+
+    .consultas__filters-actions .button {
+        width: auto;
+    }
+}
+
 .card__actions {
     display: flex;
     flex-wrap: wrap;

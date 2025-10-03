@@ -22,6 +22,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const reloadButton = document.getElementById("consultasReloadButton");
     const listFeedback = document.getElementById("consultasListFeedback");
     const tableBody = document.getElementById("consultasTableBody");
+    const filterMedicoSelect = document.getElementById("consultasFilterMedico");
+    const filterPacienteSelect = document.getElementById("consultasFilterPaciente");
+    const filterFechaInput = document.getElementById("consultasFilterFecha");
+    const filterClearButton = document.getElementById("consultasFilterClearButton");
 
     let consultas = [];
     let medicos = [];
@@ -63,57 +67,65 @@ document.addEventListener("DOMContentLoaded", async () => {
         return persona.nombreCompleto || buildNombreCompleto(persona) || `#${persona.id}`;
     }
 
-    function renderMedicosSelect(selectedId) {
-        const selectedValue = selectedId ? String(selectedId) : "";
+    function renderSelectWithFallback(selectElement, placeholder, items, selectedId) {
+        if (!selectElement) {
+            return;
+        }
+
+        const selectedValue = selectedId ? String(selectedId) : selectElement.value;
         const options = [
-            "<option value=\"\">Selecciona un médico</option>",
-            ...[...medicos]
+            `<option value="">${placeholder}</option>`,
+            ...[...items]
                 .sort((a, b) => buildDisplayName(a).localeCompare(buildDisplayName(b), "es"))
-                .map((medico) => `<option value="${medico.id}">${buildDisplayName(medico)}</option>`)
+                .map((item) => `<option value="${item.id}">${buildDisplayName(item)}</option>`)
         ];
 
-        medicoSelect.innerHTML = options.join("");
+        selectElement.innerHTML = options.join("");
 
         if (selectedValue) {
-            medicoSelect.value = selectedValue;
-            if (medicoSelect.value !== selectedValue) {
+            selectElement.value = selectedValue;
+            if (selectElement.value !== selectedValue) {
                 const fallbackOption = document.createElement("option");
                 fallbackOption.value = selectedValue;
                 fallbackOption.textContent = `#${selectedValue}`;
-                medicoSelect.appendChild(fallbackOption);
-                medicoSelect.value = selectedValue;
+                selectElement.appendChild(fallbackOption);
+                selectElement.value = selectedValue;
             }
         }
     }
 
+    function renderMedicosSelect(selectedId) {
+        renderSelectWithFallback(medicoSelect, "Selecciona un médico", medicos, selectedId);
+        renderSelectWithFallback(filterMedicoSelect, "Todos los médicos", medicos);
+    }
+
     function renderPacientesSelect(selectedId) {
-        const selectedValue = selectedId ? String(selectedId) : "";
-        const options = [
-            "<option value=\"\">Selecciona un paciente</option>",
-            ...[...pacientes]
-                .sort((a, b) => buildDisplayName(a).localeCompare(buildDisplayName(b), "es"))
-                .map((paciente) => `<option value="${paciente.id}">${buildDisplayName(paciente)}</option>`)
-        ];
+        renderSelectWithFallback(pacienteSelect, "Selecciona un paciente", pacientes, selectedId);
+        renderSelectWithFallback(filterPacienteSelect, "Todos los pacientes", pacientes);
+    }
 
-        pacienteSelect.innerHTML = options.join("");
-
-        if (selectedValue) {
-            pacienteSelect.value = selectedValue;
-            if (pacienteSelect.value !== selectedValue) {
-                const fallbackOption = document.createElement("option");
-                fallbackOption.value = selectedValue;
-                fallbackOption.textContent = `#${selectedValue}`;
-                pacienteSelect.appendChild(fallbackOption);
-                pacienteSelect.value = selectedValue;
-            }
+    function formatConsultaDate(value) {
+        if (!value) {
+            return "-";
         }
+
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return "-";
+        }
+
+        return date.toLocaleDateString("es-MX", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+        });
     }
 
     function renderConsultas() {
         if (!consultas.length) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="6" class="empty-state">No hay consultas registradas.</td>
+                    <td colspan="7" class="empty-state">No hay consultas registradas.</td>
                 </tr>
             `;
             return;
@@ -125,6 +137,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <td>#${consulta.id}</td>
                     <td>${consulta.medicoNombre}</td>
                     <td>${consulta.pacienteNombre}</td>
+                    <td>${formatConsultaDate(consulta.fechaCreacion)}</td>
                     <td>${consulta.sintomas}</td>
                     <td>${consulta.diagnostico || "-"}</td>
                     <td>
@@ -204,9 +217,35 @@ document.addEventListener("DOMContentLoaded", async () => {
         showFeedback(listFeedback, "Cargando consultas...", "loading");
 
         try {
-            consultas = await fetchJson(`${API_BASE}/consultas`);
+            const medicoFiltro = filterMedicoSelect?.value?.trim();
+            const pacienteFiltro = filterPacienteSelect?.value?.trim();
+            const fechaFiltro = filterFechaInput?.value?.trim();
+
+            const filtrosActivos = Boolean(medicoFiltro || pacienteFiltro || fechaFiltro);
+            const params = new URLSearchParams();
+
+            if (medicoFiltro) {
+                params.set("idMedico", medicoFiltro);
+            }
+
+            if (pacienteFiltro) {
+                params.set("idPaciente", pacienteFiltro);
+            }
+
+            if (fechaFiltro) {
+                params.set("fecha", fechaFiltro);
+            }
+
+            const query = params.toString();
+            const url = query ? `${API_BASE}/consultas?${query}` : `${API_BASE}/consultas`;
+
+            consultas = await fetchJson(url);
             renderConsultas();
-            showFeedback(listFeedback);
+            if (!consultas.length && filtrosActivos) {
+                showFeedback(listFeedback, "No se encontraron consultas con los filtros seleccionados.", "muted");
+            } else {
+                showFeedback(listFeedback);
+            }
         } catch (error) {
             consultas = [];
             tableBody.innerHTML = "";
@@ -261,6 +300,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     reloadButton.addEventListener("click", () => {
+        loadConsultas();
+    });
+
+    filterMedicoSelect?.addEventListener("change", () => {
+        loadConsultas();
+    });
+
+    filterPacienteSelect?.addEventListener("change", () => {
+        loadConsultas();
+    });
+
+    filterFechaInput?.addEventListener("change", () => {
+        loadConsultas();
+    });
+
+    filterClearButton?.addEventListener("click", () => {
+        if (filterMedicoSelect) {
+            filterMedicoSelect.value = "";
+        }
+        if (filterPacienteSelect) {
+            filterPacienteSelect.value = "";
+        }
+        if (filterFechaInput) {
+            filterFechaInput.value = "";
+        }
+
         loadConsultas();
     });
 

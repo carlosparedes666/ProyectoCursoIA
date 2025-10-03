@@ -10,6 +10,7 @@ public class Consulta
     public string Sintomas { get; set; } = string.Empty;
     public string? Recomendaciones { get; set; }
     public string? Diagnostico { get; set; }
+    public DateTime FechaCreacion { get; set; }
 
     public Medico Medico { get; set; } = null!;
     public Paciente Paciente { get; set; } = null!;

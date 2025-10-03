@@ -209,6 +209,11 @@ public class ApplicationDbContext : DbContext
                 .HasColumnName("diagnostico")
                 .HasMaxLength(50);
 
+            entity.Property(e => e.FechaCreacion)
+                .HasColumnName("fecha_creacion")
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("GETDATE()");
+
             entity.HasOne(e => e.Medico)
                 .WithMany(m => m.Consultas)
                 .HasForeignKey(e => e.IdMedico)

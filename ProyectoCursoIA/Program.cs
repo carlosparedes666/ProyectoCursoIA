@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using ProyectoCursoIA.Data;
 using ProyectoCursoIA.Models;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -258,13 +259,32 @@ static void MapPacienteEndpoints(RouteGroupBuilder group)
 
 static void MapConsultaEndpoints(RouteGroupBuilder group)
 {
-    group.MapGet("/", async (ApplicationDbContext db, int? top) =>
+    group.MapGet("/", async (ApplicationDbContext db, int? top, int? idMedico, int? idPaciente, string? fecha) =>
     {
         var query = db.Consultas
             .AsNoTracking()
             .Include(c => c.Medico)
             .Include(c => c.Paciente)
             .AsQueryable();
+
+        if (idMedico.HasValue)
+        {
+            query = query.Where(c => c.IdMedico == idMedico.Value);
+        }
+
+        if (idPaciente.HasValue)
+        {
+            query = query.Where(c => c.IdPaciente == idPaciente.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(fecha))
+        {
+            if (DateTime.TryParseExact(fecha, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var fechaFiltro))
+            {
+                var siguienteDia = fechaFiltro.AddDays(1);
+                query = query.Where(c => c.FechaCreacion >= fechaFiltro && c.FechaCreacion < siguienteDia);
+            }
+        }
 
         query = query.OrderByDescending(c => c.Id);
 
@@ -282,7 +302,8 @@ static void MapConsultaEndpoints(RouteGroupBuilder group)
                 (c.Paciente.PrimerNombre + " " + (c.Paciente.SegundoNombre ?? "") + " " + c.Paciente.ApellidoPaterno + " " + (c.Paciente.ApellidoMaterno ?? "")).Trim(),
                 c.Sintomas,
                 c.Recomendaciones,
-                c.Diagnostico))
+                c.Diagnostico,
+                c.FechaCreacion))
             .ToListAsync();
 
         return Results.Ok(consultas);
@@ -303,7 +324,8 @@ static void MapConsultaEndpoints(RouteGroupBuilder group)
                 (c.Paciente.PrimerNombre + " " + (c.Paciente.SegundoNombre ?? "") + " " + c.Paciente.ApellidoPaterno + " " + (c.Paciente.ApellidoMaterno ?? "")).Trim(),
                 c.Sintomas,
                 c.Recomendaciones,
-                c.Diagnostico))
+                c.Diagnostico,
+                c.FechaCreacion))
             .FirstOrDefaultAsync();
 
         return consulta is not null ? Results.Ok(consulta) : Results.NotFound();
@@ -348,7 +370,8 @@ static void MapConsultaEndpoints(RouteGroupBuilder group)
                 (c.Paciente.PrimerNombre + " " + (c.Paciente.SegundoNombre ?? "") + " " + c.Paciente.ApellidoPaterno + " " + (c.Paciente.ApellidoMaterno ?? "")).Trim(),
                 c.Sintomas,
                 c.Recomendaciones,
-                c.Diagnostico))
+                c.Diagnostico,
+                c.FechaCreacion))
             .FirstAsync();
 
         return Results.Created($"/api/consultas/{consulta.Id}", respuesta);
@@ -433,4 +456,4 @@ public record LoginRequest(string Correo, string Password);
 
 public record ConsultaRequest(int IdMedico, int IdPaciente, string Sintomas, string? Recomendaciones, string? Diagnostico);
 
-public record ConsultaResponse(int Id, int IdMedico, int IdPaciente, string MedicoNombre, string PacienteNombre, string Sintomas, string? Recomendaciones, string? Diagnostico);
+public record ConsultaResponse(int Id, int IdMedico, int IdPaciente, string MedicoNombre, string PacienteNombre, string Sintomas, string? Recomendaciones, string? Diagnostico, DateTime FechaCreacion);
