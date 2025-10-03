@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gestión de consultas</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script defer src="js/common.js"></script>
+    <script defer src="js/consultas.js"></script>
+</head>
+<body class="app">
+    <header class="top-bar">
+        <h1>Prueba de CODEX</h1>
+        <nav>
+            <a class="button button--ghost" href="dashboard.html">Dashboard</a>
+            <a class="button button--ghost" href="usuarios.html">Usuarios</a>
+            <a class="button button--ghost" href="medicos.html">Médicos</a>
+            <a class="button button--ghost" href="pacientes.html">Pacientes</a>
+            <a class="button button--ghost" href="consultas.html">Consultas</a>
+            <button id="logoutButton" class="button button--ghost">Cerrar sesión</button>
+        </nav>
+    </header>
+    <main class="content">
+        <section class="card card--narrow">
+            <h2 id="consultaFormTitle">Registrar consulta</h2>
+            <p class="text-subtle">Completa la información para registrar una nueva consulta o editar una existente.</p>
+            <form id="consultaForm" novalidate>
+                <p id="consultaFormFeedback"></p>
+                <label>
+                    Médico
+                    <select id="consultaMedico" name="medico" required>
+                        <option value="">Cargando médicos...</option>
+                    </select>
+                </label>
+                <label>
+                    Paciente
+                    <select id="consultaPaciente" name="paciente" required>
+                        <option value="">Cargando pacientes...</option>
+                    </select>
+                </label>
+                <label>
+                    Síntomas
+                    <textarea id="consultaSintomas" name="sintomas" placeholder="Describe los síntomas del paciente" required></textarea>
+                </label>
+                <label>
+                    Recomendaciones
+                    <textarea id="consultaRecomendaciones" name="recomendaciones" placeholder="Escribe recomendaciones (opcional)"></textarea>
+                </label>
+                <label>
+                    Diagnóstico
+                    <textarea id="consultaDiagnostico" name="diagnostico" placeholder="Escribe el diagnóstico (opcional)"></textarea>
+                </label>
+                <div class="form__actions">
+                    <button type="submit" id="consultaSubmitButton">Registrar consulta</button>
+                    <button type="button" id="consultaCancelButton" class="button button--ghost" hidden>Cancelar</button>
+                </div>
+            </form>
+        </section>
+        <section class="card">
+            <div class="card__header">
+                <h2>Consultas registradas</h2>
+                <button type="button" id="consultasReloadButton" class="button button--ghost">Actualizar lista</button>
+            </div>
+            <p id="consultasListFeedback"></p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Médico</th>
+                        <th>Paciente</th>
+                        <th>Síntomas</th>
+                        <th>Diagnóstico</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="consultasTableBody">
+                    <tr>
+                        <td colspan="6" class="empty-state">Cargando consultas...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer class="footer">&copy; <span id="year"></span> Prueba de CODEX.</footer>
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

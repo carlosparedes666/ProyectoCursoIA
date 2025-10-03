@@ -95,6 +95,12 @@ body {
     margin-bottom: 1rem;
 }
 
+.card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
 .button,
 button,
 input[type="submit"],

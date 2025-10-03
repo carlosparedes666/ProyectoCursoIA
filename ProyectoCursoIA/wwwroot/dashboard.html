@@ -16,6 +16,7 @@
             <a class="button button--ghost" href="usuarios.html">Usuarios</a>
             <a class="button button--ghost" href="medicos.html">Médicos</a>
             <a class="button button--ghost" href="pacientes.html">Pacientes</a>
+            <a class="button button--ghost" href="consultas.html">Consultas</a>
             <button id="logoutButton" class="button button--ghost">Cerrar sesión</button>
         </nav>
     </header>
@@ -27,7 +28,10 @@
         <section class="card">
             <div class="card__header">
                 <h2>Últimas consultas</h2>
-                <a class="button" href="create-consulta.html">Crear consulta</a>
+                <div class="card__actions">
+                    <a class="button button--ghost" href="consultas.html">Administrar consultas</a>
+                    <a class="button" href="create-consulta.html">Crear consulta</a>
+                </div>
             </div>
             <div id="consultasContainer"></div>
         </section>
