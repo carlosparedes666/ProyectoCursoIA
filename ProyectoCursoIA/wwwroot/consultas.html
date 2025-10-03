@@ -61,6 +61,27 @@
                 <h2>Consultas registradas</h2>
                 <button type="button" id="consultasReloadButton" class="button button--ghost">Actualizar lista</button>
             </div>
+            <div class="consultas__filters">
+                <label>
+                    Médico
+                    <select id="consultasFilterMedico">
+                        <option value="">Todos los médicos</option>
+                    </select>
+                </label>
+                <label>
+                    Paciente
+                    <select id="consultasFilterPaciente">
+                        <option value="">Todos los pacientes</option>
+                    </select>
+                </label>
+                <label>
+                    Fecha
+                    <input type="date" id="consultasFilterFecha" />
+                </label>
+                <div class="consultas__filters-actions">
+                    <button type="button" id="consultasFilterClearButton" class="button button--ghost">Limpiar filtros</button>
+                </div>
+            </div>
             <p id="consultasListFeedback"></p>
             <table class="table">
                 <thead>
@@ -68,6 +89,7 @@
                         <th>ID</th>
                         <th>Médico</th>
                         <th>Paciente</th>
+                        <th>Fecha</th>
                         <th>Síntomas</th>
                         <th>Diagnóstico</th>
                         <th>Acciones</th>
@@ -75,7 +97,7 @@
                 </thead>
                 <tbody id="consultasTableBody">
                     <tr>
-                        <td colspan="6" class="empty-state">Cargando consultas...</td>
+                        <td colspan="7" class="empty-state">Cargando consultas...</td>
                     </tr>
                 </tbody>
             </table>
