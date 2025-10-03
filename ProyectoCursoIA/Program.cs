@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using ProyectoCursoIA.Data;
+using ProyectoCursoIA.Dtos;
 using ProyectoCursoIA.Models;
 using System.Globalization;
 
@@ -48,25 +49,62 @@ static void MapUsuarioEndpoints(RouteGroupBuilder group)
     group.MapGet("/", async (ApplicationDbContext db) =>
         await db.Usuarios
             .AsNoTracking()
+            .Select(u => new UsuarioResponse(
+                u.Id,
+                u.Correo,
+                u.NombreCompleto,
+                u.IdMedico,
+                u.Activo,
+                u.FechaCreacion))
             .ToListAsync());
 
     group.MapGet("/{id:int}", async (int id, ApplicationDbContext db) =>
     {
         var usuario = await db.Usuarios
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Id == id);
+            .Where(u => u.Id == id)
+            .Select(u => new UsuarioResponse(
+                u.Id,
+                u.Correo,
+                u.NombreCompleto,
+                u.IdMedico,
+                u.Activo,
+                u.FechaCreacion))
+            .FirstOrDefaultAsync();
 
         return usuario is not null ? Results.Ok(usuario) : Results.NotFound();
     });
 
-    group.MapPost("/", async (Usuario usuario, ApplicationDbContext db) =>
+    group.MapPost("/", async (UsuarioCreateRequest request, ApplicationDbContext db) =>
     {
+        var usuario = new Usuario
+        {
+            Correo = request.Correo,
+            Password = request.Password,
+            NombreCompleto = request.NombreCompleto,
+            IdMedico = request.IdMedico,
+            Activo = request.Activo
+        };
+
         db.Usuarios.Add(usuario);
         await db.SaveChangesAsync();
-        return Results.Created($"/api/usuarios/{usuario.Id}", usuario);
+
+        var response = await db.Usuarios
+            .AsNoTracking()
+            .Where(u => u.Id == usuario.Id)
+            .Select(u => new UsuarioResponse(
+                u.Id,
+                u.Correo,
+                u.NombreCompleto,
+                u.IdMedico,
+                u.Activo,
+                u.FechaCreacion))
+            .FirstAsync();
+
+        return Results.Created($"/api/usuarios/{usuario.Id}", response);
     });
 
-    group.MapPut("/{id:int}", async (int id, Usuario input, ApplicationDbContext db) =>
+    group.MapPut("/{id:int}", async (int id, UsuarioUpdateRequest input, ApplicationDbContext db) =>
     {
         var usuario = await db.Usuarios.FindAsync(id);
         if (usuario is null)
@@ -75,13 +113,21 @@ static void MapUsuarioEndpoints(RouteGroupBuilder group)
         }
 
         usuario.Correo = input.Correo;
-        usuario.Password = input.Password;
         usuario.NombreCompleto = input.NombreCompleto;
         usuario.IdMedico = input.IdMedico;
         usuario.Activo = input.Activo;
 
         await db.SaveChangesAsync();
-        return Results.NoContent();
+
+        var response = new UsuarioResponse(
+            usuario.Id,
+            usuario.Correo,
+            usuario.NombreCompleto,
+            usuario.IdMedico,
+            usuario.Activo,
+            usuario.FechaCreacion);
+
+        return Results.Ok(response);
     });
 
     group.MapDelete("/{id:int}", async (int id, ApplicationDbContext db) =>
@@ -457,3 +503,5 @@ public record LoginRequest(string Correo, string Password);
 public record ConsultaRequest(int IdMedico, int IdPaciente, string Sintomas, string? Recomendaciones, string? Diagnostico);
 
 public record ConsultaResponse(int Id, int IdMedico, int IdPaciente, string MedicoNombre, string PacienteNombre, string Sintomas, string? Recomendaciones, string? Diagnostico, DateTime FechaCreacion);
+
+public partial class Program;
