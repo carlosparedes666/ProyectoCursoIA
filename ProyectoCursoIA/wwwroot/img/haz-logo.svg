@@ -1,0 +1,33 @@
+<svg width="240" height="70" viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="rainbow" x1="0" y1="35" x2="240" y2="35" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#ff4e50" />
+            <stop offset="16%" stop-color="#ffa74e" />
+            <stop offset="33%" stop-color="#ffe74e" />
+            <stop offset="50%" stop-color="#7bff72" />
+            <stop offset="66%" stop-color="#4ef3ff" />
+            <stop offset="83%" stop-color="#5c6cff" />
+            <stop offset="100%" stop-color="#c24eff" />
+        </linearGradient>
+        <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f0f0f0" />
+            <stop offset="25%" stop-color="#c9c9c9" />
+            <stop offset="50%" stop-color="#ffffff" />
+            <stop offset="75%" stop-color="#9a9a9a" />
+            <stop offset="100%" stop-color="#e5e5e5" />
+        </linearGradient>
+        <filter id="glow" x="-20%" y="-200%" width="140%" height="400%" color-interpolation-filters="sRGB">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+    </defs>
+    <rect x="15" y="31" width="210" height="8" rx="4" fill="url(#rainbow)" filter="url(#glow)" />
+    <text x="20" y="52" font-family="'Montserrat', 'Arial', sans-serif" font-size="48" font-weight="700" letter-spacing="6" fill="url(#metal)">HAZ</text>
+    <g filter="url(#glow)">
+        <line x1="120" y1="15" x2="120" y2="55" stroke="white" stroke-width="1" opacity="0.85" />
+        <line x1="100" y1="35" x2="140" y2="35" stroke="white" stroke-width="1" opacity="0.85" />
+    </g>
+</svg>
