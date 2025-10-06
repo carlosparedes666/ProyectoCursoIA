@@ -1,6 +1,8 @@
 using System;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using ProyectoCursoIA.Data;
 using ProyectoCursoIA.Models;
@@ -24,18 +26,24 @@ public class UsuarioEndpointsTests : IClassFixture<CustomWebApplicationFactory>
     {
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<Usuario>>();
         db.Database.EnsureDeleted();
         db.Database.EnsureCreated();
 
-        db.Usuarios.Add(new Usuario
+        var usuario = new Usuario
         {
             Correo = "correo@example.com",
-            Password = "Secreto123",
             NombreCompleto = "Usuario Prueba",
             Activo = true,
             FechaCreacion = DateTime.UtcNow
-        });
+        };
+        usuario.Password = passwordHasher.HashPassword(usuario, "Secreto123");
+
+        db.Usuarios.Add(usuario);
         await db.SaveChangesAsync();
+
+        var token = await AuthenticateAsync("correo@example.com", "Secreto123");
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         var response = await _client.GetAsync("/api/usuarios");
         response.EnsureSuccessStatusCode();
@@ -54,8 +62,24 @@ public class UsuarioEndpointsTests : IClassFixture<CustomWebApplicationFactory>
     {
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<Usuario>>();
         db.Database.EnsureDeleted();
         db.Database.EnsureCreated();
+
+        var usuario = new Usuario
+        {
+            Correo = "admin@example.com",
+            NombreCompleto = "Administrador",
+            Activo = true,
+            FechaCreacion = DateTime.UtcNow
+        };
+        usuario.Password = passwordHasher.HashPassword(usuario, "AdminPass123!");
+
+        db.Usuarios.Add(usuario);
+        await db.SaveChangesAsync();
+
+        var token = await AuthenticateAsync("admin@example.com", "AdminPass123!");
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         var payload = new
         {
@@ -74,4 +98,20 @@ public class UsuarioEndpointsTests : IClassFixture<CustomWebApplicationFactory>
 
         Assert.DoesNotContain(usuario.EnumerateObject(), p => string.Equals(p.Name, "Password", StringComparison.OrdinalIgnoreCase));
     }
+
+    private async Task<string> AuthenticateAsync(string correo, string password)
+    {
+        _client.DefaultRequestHeaders.Authorization = null;
+
+        var response = await _client.PostAsJsonAsync("/api/login", new { correo, password });
+        response.EnsureSuccessStatusCode();
+
+        var login = await response.Content.ReadFromJsonAsync<LoginResponse>();
+        Assert.NotNull(login);
+        Assert.False(string.IsNullOrWhiteSpace(login!.Token));
+
+        return login.Token;
+    }
+
+    private sealed record LoginResponse(int Id, string NombreCompleto, string Correo, string Token, DateTime ExpiresAt);
 }

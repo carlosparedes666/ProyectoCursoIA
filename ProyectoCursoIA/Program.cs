@@ -1,10 +1,16 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using ProyectoCursoIA.Configuration;
 using ProyectoCursoIA.Data;
 using ProyectoCursoIA.Dtos;
 using ProyectoCursoIA.Models;
+using ProyectoCursoIA.Services;
 using System.Globalization;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +28,43 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod());
 });
 
+var jwtSettingsSection = builder.Configuration.GetSection("Jwt");
+builder.Services.Configure<JwtSettings>(jwtSettingsSection);
+
+var jwtSettings = jwtSettingsSection.Get<JwtSettings>()
+    ?? throw new InvalidOperationException("JWT configuration section 'Jwt' not found.");
+
+if (string.IsNullOrWhiteSpace(jwtSettings.Key))
+{
+    throw new InvalidOperationException("A signing key must be provided for JWT authentication.");
+}
+
+if (string.IsNullOrWhiteSpace(jwtSettings.Issuer) || string.IsNullOrWhiteSpace(jwtSettings.Audience))
+{
+    throw new InvalidOperationException("JWT issuer and audience must be configured.");
+}
+
+builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
+builder.Services.AddSingleton<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -31,16 +74,19 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
 var api = app.MapGroup("/api");
 
-MapUsuarioEndpoints(api.MapGroup("/usuarios"));
-MapMedicoEndpoints(api.MapGroup("/medicos"));
-MapPacienteEndpoints(api.MapGroup("/pacientes"));
-MapConsultaEndpoints(api.MapGroup("/consultas"));
 MapLoginEndpoint(api);
+
+MapUsuarioEndpoints(api.MapGroup("/usuarios").RequireAuthorization());
+MapMedicoEndpoints(api.MapGroup("/medicos").RequireAuthorization());
+MapPacienteEndpoints(api.MapGroup("/pacientes").RequireAuthorization());
+MapConsultaEndpoints(api.MapGroup("/consultas").RequireAuthorization());
 
 app.Run();
 
@@ -75,16 +121,17 @@ static void MapUsuarioEndpoints(RouteGroupBuilder group)
         return usuario is not null ? Results.Ok(usuario) : Results.NotFound();
     });
 
-    group.MapPost("/", async (UsuarioCreateRequest request, ApplicationDbContext db) =>
+    group.MapPost("/", async (UsuarioCreateRequest request, ApplicationDbContext db, IPasswordHasher<Usuario> passwordHasher) =>
     {
         var usuario = new Usuario
         {
             Correo = request.Correo,
-            Password = request.Password,
             NombreCompleto = request.NombreCompleto,
             IdMedico = request.IdMedico,
             Activo = request.Activo
         };
+
+        usuario.Password = passwordHasher.HashPassword(usuario, request.Password);
 
         db.Usuarios.Add(usuario);
         await db.SaveChangesAsync();
@@ -469,17 +516,41 @@ static void MapConsultaEndpoints(RouteGroupBuilder group)
 
 static void MapLoginEndpoint(RouteGroupBuilder group)
 {
-    group.MapPost("/login", async (LoginRequest request, ApplicationDbContext db) =>
+    group.MapPost("/login", async (
+        LoginRequest request,
+        ApplicationDbContext db,
+        IPasswordHasher<Usuario> passwordHasher,
+        IJwtTokenService tokenService) =>
     {
         var usuario = await db.Usuarios
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Correo == request.Correo && u.Password == request.Password);
+            .FirstOrDefaultAsync(u => u.Correo == request.Correo);
 
         if (usuario is null)
         {
             return Results.Json(
                 new { message = "Usuario o contraseña incorrectos." },
                 statusCode: StatusCodes.Status401Unauthorized);
+        }
+
+        var verificationResult = passwordHasher.VerifyHashedPassword(usuario, usuario.Password, request.Password);
+        var shouldPersistPassword = false;
+
+        if (verificationResult == PasswordVerificationResult.Failed)
+        {
+            if (!string.Equals(usuario.Password, request.Password, StringComparison.Ordinal))
+            {
+                return Results.Json(
+                    new { message = "Usuario o contraseña incorrectos." },
+                    statusCode: StatusCodes.Status401Unauthorized);
+            }
+
+            usuario.Password = passwordHasher.HashPassword(usuario, request.Password);
+            shouldPersistPassword = true;
+        }
+        else if (verificationResult == PasswordVerificationResult.SuccessRehashNeeded)
+        {
+            usuario.Password = passwordHasher.HashPassword(usuario, request.Password);
+            shouldPersistPassword = true;
         }
 
         if (!usuario.Activo)
@@ -489,16 +560,25 @@ static void MapLoginEndpoint(RouteGroupBuilder group)
                 statusCode: StatusCodes.Status401Unauthorized);
         }
 
-        return Results.Ok(new
+        if (shouldPersistPassword)
         {
-            id = usuario.Id,
-            nombreCompleto = usuario.NombreCompleto,
-            correo = usuario.Correo
-        });
+            await db.SaveChangesAsync();
+        }
+
+        var token = tokenService.CreateToken(usuario);
+
+        return Results.Ok(new LoginResponse(
+            usuario.Id,
+            usuario.NombreCompleto,
+            usuario.Correo,
+            token.AccessToken,
+            token.ExpiresAt));
     });
 }
 
 public record LoginRequest(string Correo, string Password);
+
+public record LoginResponse(int Id, string NombreCompleto, string Correo, string Token, DateTime ExpiresAt);
 
 public record ConsultaRequest(int IdMedico, int IdPaciente, string Sintomas, string? Recomendaciones, string? Diagnostico);
 

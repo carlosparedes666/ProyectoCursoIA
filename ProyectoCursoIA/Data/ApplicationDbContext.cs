@@ -53,7 +53,7 @@ public class ApplicationDbContext : DbContext
 
             entity.Property(e => e.Password)
                 .HasColumnName("password")
-                .HasMaxLength(50)
+                .HasMaxLength(256)
                 .IsRequired();
 
             entity.Property(e => e.NombreCompleto)
