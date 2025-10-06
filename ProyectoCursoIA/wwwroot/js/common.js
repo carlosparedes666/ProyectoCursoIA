@@ -1,6 +1,10 @@
 const API_BASE = "/api";
 
 function saveUser(user) {
+    if (!user || !user.token) {
+        throw new Error("No se recibió un token de autenticación válido.");
+    }
+
     sessionStorage.setItem("usuario", JSON.stringify(user));
 }
 
@@ -11,12 +15,32 @@ function getStoredUser() {
     }
 
     try {
-        return JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+
+        if (!parsed || !parsed.token || isTokenExpired(parsed.expiresAt)) {
+            sessionStorage.removeItem("usuario");
+            return null;
+        }
+
+        return parsed;
     } catch (error) {
         console.error("No se pudo leer la información del usuario", error);
         sessionStorage.removeItem("usuario");
         return null;
     }
+}
+
+function isTokenExpired(expiresAt) {
+    if (!expiresAt) {
+        return true;
+    }
+
+    const expiration = new Date(expiresAt).getTime();
+    if (Number.isNaN(expiration)) {
+        return true;
+    }
+
+    return expiration <= Date.now();
 }
 
 function requireUser() {
@@ -35,12 +59,21 @@ function logout() {
 }
 
 async function fetchJson(url, options = {}) {
+    const user = getStoredUser();
+    const defaultHeaders = {
+        "Content-Type": "application/json"
+    };
+
+    if (user?.token) {
+        defaultHeaders.Authorization = `Bearer ${user.token}`;
+    }
+
     const response = await fetch(url, {
+        ...options,
         headers: {
-            "Content-Type": "application/json",
+            ...defaultHeaders,
             ...(options.headers || {})
-        },
-        ...options
+        }
     });
 
     let data = null;
@@ -48,6 +81,15 @@ async function fetchJson(url, options = {}) {
         data = await response.json();
     } catch (error) {
         // Ignoramos si no hay cuerpo JSON
+    }
+
+    if (response.status === 401) {
+        if (user) {
+            logout();
+        }
+
+        const message = data?.message || "Tu sesión ha expirado. Inicia sesión nuevamente.";
+        throw new Error(message);
     }
 
     if (!response.ok) {
