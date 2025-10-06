@@ -1,11 +1,38 @@
 const API_BASE = "/api";
 
+function normalizeUser(user) {
+    if (!user || typeof user !== "object") {
+        return null;
+    }
+
+    const token = (user.token ?? user.Token ?? user.accessToken ?? user.AccessToken ?? "").trim();
+    const expiresAtValue = user.expiresAt ?? user.ExpiresAt ?? user.expiration ?? user.Expiration;
+    const expiresAt = expiresAtValue instanceof Date
+        ? expiresAtValue.toISOString()
+        : typeof expiresAtValue === "string"
+            ? expiresAtValue.trim()
+            : expiresAtValue;
+
+    if (!token || !expiresAt) {
+        return null;
+    }
+
+    return {
+        id: user.id ?? user.Id ?? null,
+        nombreCompleto: user.nombreCompleto ?? user.NombreCompleto ?? "",
+        correo: user.correo ?? user.Correo ?? "",
+        token,
+        expiresAt
+    };
+}
+
 function saveUser(user) {
-    if (!user || !user.token) {
+    const normalized = normalizeUser(user);
+    if (!normalized) {
         throw new Error("No se recibió un token de autenticación válido.");
     }
 
-    sessionStorage.setItem("usuario", JSON.stringify(user));
+    sessionStorage.setItem("usuario", JSON.stringify(normalized));
 }
 
 function getStoredUser() {
@@ -16,13 +43,19 @@ function getStoredUser() {
 
     try {
         const parsed = JSON.parse(raw);
+        const normalized = normalizeUser(parsed);
 
-        if (!parsed || !parsed.token || isTokenExpired(parsed.expiresAt)) {
+        if (!normalized || isTokenExpired(normalized.expiresAt)) {
             sessionStorage.removeItem("usuario");
             return null;
         }
 
-        return parsed;
+        const normalizedRaw = JSON.stringify(normalized);
+        if (raw !== normalizedRaw) {
+            sessionStorage.setItem("usuario", normalizedRaw);
+        }
+
+        return normalized;
     } catch (error) {
         console.error("No se pudo leer la información del usuario", error);
         sessionStorage.removeItem("usuario");
